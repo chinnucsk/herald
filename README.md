@@ -1,4 +1,4 @@
-erlang-mobile-push
-==================
+herald
+======
 
 scalable push-service written in erlang.
