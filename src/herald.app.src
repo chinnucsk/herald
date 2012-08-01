@@ -1,0 +1,9 @@
+%% -*- Erlang -*-
+{application, herald,
+ [{description,"mobile push notifications"},
+  {vsn,"0.0.1"},
+  {modules,[]},
+  {registered,[herald_sup]},
+  {applications,[kernel,stdlib]},
+  {mod,{herald_app,[]}},
+  {env,[]}]}.
