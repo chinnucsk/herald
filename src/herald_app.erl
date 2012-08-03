@@ -8,13 +8,17 @@ start() ->
 start(normal, _Args) ->
     application:start(lager),
     application:start(inets),
+    application:start(crypto),
+    application:start(public_key),
+    application:start(ssl),
+    
     APIKey = case application:get_env(herald, api_key) of
                  undefined -> 
                      lager:error("api key not found"),
                      throw(no_api_key);
                  {ok, Key} -> Key
              end,
-                     
+    
     herald_sup:start_link(APIKey).
 
 stop(_State) ->
