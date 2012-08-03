@@ -153,11 +153,11 @@ send_push(#state{registeration_id = RegistrationId,
         CollapseKey,
     Request = {?GCM, Headers,
                "application/x-www-form-urlencoded;charset=UTF-8", Body},
+    lager:debug("~s Making Request: ~p", [LogId, Request]),
     case httpc:request(post, Request, [], []) of
-        {ok, {{_, StatusCode, _}, _}, Body} ->
+        {ok, {{_, StatusCode, _}, _ResHeaders, ResBody}} ->
             lager:debug("~s push_response: ~p ~p", 
-                        [LogId, StatusCode, Body]);
+                        [LogId, StatusCode, ResBody]);
         {error, Reason} ->
             lager:error("~s push_error: ~p", [LogId, Reason])
     end.
-            
