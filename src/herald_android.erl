@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/3, push/2, stop/1]).
+-export([start_link/3, push/2, stop/1, set_registration_id/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -41,6 +41,11 @@ start_link(APIKey, RegistrationId, LogId) ->
     gen_server:start_link(?MODULE, [APIKey, RegistrationId, LogId], []).
 push(Device, Message) ->
     gen_server:cast(Device, {push, Message}).
+set_registration_id(Device, RegistrationId) 
+  when is_list(RegistrationId) ->
+    gen_server:cast(Device, {set_registration_id, RegistrationId});
+set_registration_id(_Device, _RegistrationId) ->
+    {error, 'invalid-registeration-id'}.
 stop(Device) ->
     gen_server:cast(Device, stop).
 
@@ -99,6 +104,8 @@ handle_call(_Request, _From, State) ->
 handle_cast({push, Message}, State) ->
     send_push(State, Message),
     {noreply, State};
+handle_cast({set_registration_id, RegistrationId}, State) ->
+    {noreply, State#state{registeration_id = RegistrationId}};
 handle_cast(stop, #state{log_id = LogId} = State) ->
     lager:info("~s stopping", [LogId]),
     {stop, normal, State}.
